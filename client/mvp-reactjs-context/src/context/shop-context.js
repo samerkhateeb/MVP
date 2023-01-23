@@ -1,0 +1,26 @@
+import React from "react";
+
+export default React.createContext({
+  products: [],
+  cart: [],
+  loading: true,
+  token_access: null,
+  token_refresh: null,
+  token_csrf: null,
+  first_name: null,
+  last_name: null,
+  username: null,
+  image: null,
+  bio: null,
+  email: null,
+  addProductToCart: (product) => {},
+  removeProductFromCart: (productId) => {},
+  doLogin: (data) => {},
+  doRegister: (data) => {},
+  doLogout: () => {},
+  doDepositeReset: () => {},
+  doDepositeSave: (data) => {},
+  doProductUpdate: (data) => {},
+  doProductDelete: (data) => {},
+  doBuyAllItems: (products) => {},
+});
