@@ -63,7 +63,7 @@ OK !!!!
 :tada::tada: Super :tada::tada:
 
 ## Postman:
-You can refer the file includes [Postman Collections](https://github.com/samerkhateeb/MVP/blob/master/MVP.postman_collection.json), it includes 10 methods to test the API's one by one, i put also test values on it, you can change it and try to send requests in your local machine.
+Here you can refer to the file  [Postman Collections](https://github.com/samerkhateeb/MVP/blob/master/MVP.postman_collection.json), it includes 10 methods to test the API's one by one, i put also test values on it, you can change it and try to send requests in your local machine.
 
 <img width="1336" alt="image" src="https://user-images.githubusercontent.com/55295850/214180178-5eddf8c5-ff55-4e5c-aa0f-f30ec6039883.png">
 
