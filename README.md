@@ -49,7 +49,7 @@ http://localhost:3000/
 ## Django Test Cases:
 
 
-You can run the Test cases for Product CRUD, deposite as well as buy products API's, the test contains 14 test case for 7 API's,  you have to go go to the server folder `cd server` and run the following command on it:
+You can run the Test cases for Product CRUD, deposite as well as buy products API's, the test contains 14 test case for 7 API's, you have to go to the server folder `cd server` and run the following command on it:
 ```
 docker compose run web python manage.py test
 ```
