@@ -38,13 +38,29 @@ docker compose up -d
 sudo -u postgres pg_ctl -D/Library/PostgreSQL/12/data stop
 ```
 
-## Run the Fronend
+## Run The Fronend
 
 After you clone the repository in your machine, go to the directory `client\mvp-reactjs-context`, then you have to install the packages using `yarn`, then after the packages are successfully installed, please type `yarn start`, this will activate the environment in your local machine in the URL:
 http://localhost:3000/
 
 <img width="764" alt="image" src="https://user-images.githubusercontent.com/55295850/214182445-eed661bd-e43b-434c-8f5a-1d632d7dec0c.png">
 
+
+## Django Test Cases:
+
+
+you can run the Test cases for Product CRUD, deposite as well as buy products API's, the test contains 14 test case for 7 API's,  you have to go go to the server folder `cd server` and run the following command on it:
+```
+docker compose run web python manage.py test
+```
+The result will be Ran 14 tests in 5.278s
+
+OK !!!!
+
+<img width="1525" alt="image" src="https://user-images.githubusercontent.com/55295850/214631898-4d145823-e1c1-4af6-897f-6195418e1b41.png">
+
+
+:tada::tada: Super :tada::tada:
 
 ## Postman:
 you can refer the file includes [Postman Collections](https://github.com/samerkhateeb/MVP/blob/master/MVP.postman_collection.json), it includes 10 methods to test the API's one by one, i put also test values on it, you can change it and try to send requests in your local machine.
