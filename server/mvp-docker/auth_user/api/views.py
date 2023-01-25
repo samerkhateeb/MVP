@@ -4,11 +4,12 @@ from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.contrib.auth.models import User
 
 # Create your views here.
+from rest_framework import permissions, authentication, status
+from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token as csrfToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import permissions
+
 import re
 from rest_framework.authtoken.models import Token
 

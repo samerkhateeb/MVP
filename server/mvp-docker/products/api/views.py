@@ -63,17 +63,18 @@ def vProducts_manage(request, id):
     data = {}
     try:
         if request.method == 'PUT':
-            obj = ThisModel.objects.get(pk=id, seller=request.user)
-            _serializer = serializer(obj, data=request.data)
-            if _serializer.is_valid():
-                data['context'] = _serializer.validated_data
-                _serializer.save()
-                _status = status.HTTP_205_RESET_CONTENT
-                # data = _address_data
-                error = "0"
-            else:
-                logging.exception('vProducts_manage PUT Validation Error: {0} | {1}'.format(
-                    _serializer.errors, _status))
+            obj = ThisModel.objects.filter(pk=id, seller=request.user).first()
+            if obj:
+                _serializer = serializer(obj, data=request.data)
+                if _serializer and _serializer.is_valid():
+                    data['context'] = _serializer.validated_data
+                    _serializer.save()
+                    _status = status.HTTP_205_RESET_CONTENT
+                    # data = _address_data
+                    error = "0"
+                else:
+                    logging.exception('vProducts_manage PUT Validation Error: {0} | {1}'.format(
+                        _serializer.errors, _status))
 
         elif request.method == 'DELETE':
             obj = ThisModel.objects.filter(seller=request.user, pk=id).first()
@@ -81,8 +82,8 @@ def vProducts_manage(request, id):
                 obj.delete()
                 _status = status.HTTP_205_RESET_CONTENT
             else:
-                logging.exception('vProducts_manage Unable to Delete Error: {0} | {1}'.format(
-                    _serializer.errors, _status))
+                logging.exception('vProducts_manage Unable to Delete Error: {0}'.format(
+                    _status))
 
         error = "0"
 

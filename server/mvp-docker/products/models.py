@@ -79,7 +79,7 @@ class ProductsModel(CMSPlugin):
         ordering = ("-sorting", "-id")
 
     def get_product(self):
-        return self.title + ' the description is ' + self.description
+        return self.title + ' belongs to ' + self.description
 
     def __str__(self):
         return '{0} - {1}'.format(self.title, self.seller)

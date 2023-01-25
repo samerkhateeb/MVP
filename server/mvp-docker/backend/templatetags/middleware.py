@@ -2,15 +2,17 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.deprecation import MiddlewareMixin
 
+
 class ForceResponse(Exception):
     def __init__(self, response):
         self.response = response
 
+
 class ForceResponseMiddleware:
-    
+
     def __init__(self, get_response):
-         self.get_response = get_response
-         
+        self.get_response = get_response
+
     def __call__(self, request):
         return self.get_response(request)
 
@@ -33,17 +35,7 @@ class ForceResponseMiddleware:
         if isinstance(e, TemplateSyntaxError) and getattr(e, 'exc_info', 0):
             try:
                 e = e.exc_info[1]
-            except: # Not iterable or IndexError
-                raise e # as if nothing had happened
+            except:  # Not iterable or IndexError
+                raise e  # as if nothing had happened
         if isinstance(e, ForceResponse):
             return e.response
-
-
-
-
-
-
-
-
-
-
