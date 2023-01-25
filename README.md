@@ -7,7 +7,7 @@ This guide is for Mac Users
 
 
 
-## Run the Backend
+## Run The Backend
 
 <img width="903" alt="image" src="https://user-images.githubusercontent.com/55295850/214182207-d8c8bd2d-d03b-486c-8783-3d4bb64a9de7.png">
 
@@ -49,7 +49,7 @@ http://localhost:3000/
 ## Django Test Cases:
 
 
-you can run the Test cases for Product CRUD, deposite as well as buy products API's, the test contains 14 test case for 7 API's,  you have to go go to the server folder `cd server` and run the following command on it:
+You can run the Test cases for Product CRUD, deposite as well as buy products API's, the test contains 14 test case for 7 API's,  you have to go go to the server folder `cd server` and run the following command on it:
 ```
 docker compose run web python manage.py test
 ```
@@ -63,7 +63,7 @@ OK !!!!
 :tada::tada: Super :tada::tada:
 
 ## Postman:
-you can refer the file includes [Postman Collections](https://github.com/samerkhateeb/MVP/blob/master/MVP.postman_collection.json), it includes 10 methods to test the API's one by one, i put also test values on it, you can change it and try to send requests in your local machine.
+You can refer the file includes [Postman Collections](https://github.com/samerkhateeb/MVP/blob/master/MVP.postman_collection.json), it includes 10 methods to test the API's one by one, i put also test values on it, you can change it and try to send requests in your local machine.
 
 <img width="1336" alt="image" src="https://user-images.githubusercontent.com/55295850/214180178-5eddf8c5-ff55-4e5c-aa0f-f30ec6039883.png">
 
