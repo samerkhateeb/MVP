@@ -128,12 +128,16 @@ def vProduct_buy(request, id, amount):
 
                     product.amount = int(product.amount) - amount
                     product.save()
+                    try:
+                        txn = TransactionModel(
+                            buyer=buyer.user, product=product,  amount=amount,)
+                        txn.save()
 
-                    txn = TransactionModel(
-                        amount=amount, buyer=buyer.user, product=product)
-                    txn.save()
+                    except Exception:
+                        logging.exception(
+                            'vProduct_buy Error: buyer.user {0} - product {1} - amount {2}'.format(buyer.user, product, amount))
                     _status = status.HTTP_205_RESET_CONTENT
-                    data['context'] = txn.json()
+                    # data['context'] = txn.json()
                     error = "0"
 
     except Exception as e:

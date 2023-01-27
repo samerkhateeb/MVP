@@ -20,6 +20,7 @@ class GlobalState extends Component {
     this.doRegister = this.doRegister.bind(this);
     this.doLogout = this.doLogout.bind(this);
     this.doDepositeReset = this.doDepositeReset.bind(this);
+    this.doDepositeSave = this.doDepositeSave.bind(this);
     this.doBuyAllItems = this.doBuyAllItems.bind(this);
     this.doProductUpdate = this.doProductUpdate.bind(this);
     this.doProductDelete = this.doProductDelete.bind(this);
@@ -40,6 +41,7 @@ class GlobalState extends Component {
       image: "",
       bio: "",
       deposite: "",
+      total: "",
     };
   }
 
@@ -123,6 +125,7 @@ class GlobalState extends Component {
     try {
       const Bearer = this.state.token_access;
       const response = await depositeReset(Bearer);
+      this.setState({ deposite: 0 });
       return response;
     } catch (error) {
       return "";
@@ -131,9 +134,11 @@ class GlobalState extends Component {
 
   async doDepositeSave(data) {
     try {
-      const Bearer = this.token_access;
-      const response = await depositeSave(Bearer, data);
-      return response;
+      const Bearer = this.state.token_access;
+      await depositeSave(Bearer, data);
+      this.setState({ deposite: this.state.deposite + data.deposite });
+
+      return this.state.deposite;
     } catch (error) {
       console.log(error);
       return false;
@@ -156,6 +161,8 @@ class GlobalState extends Component {
         image: response.userprofile.image,
         bio: response.userprofile.bio,
         deposite: response.userprofile.deposite,
+        total: 0,
+        cart: [],
       });
 
       if (response.error !== "0") {
@@ -178,10 +185,12 @@ class GlobalState extends Component {
         first_name: null,
         last_name: null,
         username: null,
-        useer_type: null,
+        useer_type: "",
         email: null,
         bio: null,
         image: null,
+        total: 0,
+        cart: [],
       });
 
       return this.state;
@@ -206,6 +215,8 @@ class GlobalState extends Component {
         image: response.userprofile.image,
         bio: response.userprofile.bio,
         deposite: response.userprofile.deposite,
+        total: 0,
+        cart: [],
       });
 
       if (response.error !== "0") {
@@ -226,28 +237,69 @@ class GlobalState extends Component {
       (item) => item.id === product.id
     );
 
-    if (updatedItemIndex < 0) {
+    let cost = parseInt(product.cost);
+    let total = parseInt(this.state.total) || 0;
+    let deposite = this.state.deposite;
+
+    if (updatedItemIndex < 0 && total + cost <= deposite) {
+      this.setState({ total: total + cost }, () => {
+        console.log("this.state.total", this.state.total);
+      });
+
+      // one item
       // if the item is not exist, push it.
-      updatedCart.push({ ...product, quantity: 1 });
+      updatedCart.push({ ...product, quantity: 1, cost: cost });
     } else {
+      // multiple items
       const updatedItem = { ...updatedCart[updatedItemIndex] };
-      if (updatedItem.quantity + 1 <= product.amount) {
+      console.log("this.state.deposite", this.state.deposite);
+      console.log("this.state.total", this.state.total);
+      console.log("parseInt(product.cost)", parseInt(product.cost));
+      console.log(
+        "this.state.total + parseInt(product.cost) < this.state.deposite =",
+        this.state.total + parseInt(product.cost) <= this.state.deposite
+      );
+
+      if (
+        updatedItem.quantity + 1 <= product.amount &&
+        this.state.total + parseInt(product.cost) <= this.state.deposite
+      ) {
+        this.setState(
+          {
+            total: this.state.total + parseInt(product.cost),
+          },
+          () => {
+            console.log("this.state.total after", this.state.total);
+            console.log("this.state.cost after", this.state.cost);
+            console.log("product.cost", product.cost);
+          }
+        );
+
         // if the item exist, just updatet he quentity
         updatedItem.quantity++;
+        updatedItem.cost = updatedItem.quantity * product.cost;
         updatedCart[updatedItemIndex] = updatedItem;
       }
     }
     this.setState({ cart: updatedCart });
   };
 
-  removeProductFromCart = (productId) => {
+  removeProductFromCart = (productId, _quantity = 1) => {
     let updatedCart = [...this.state.cart];
     let updatedItemIndex = updatedCart.findIndex(
       (item) => item.id === productId
     );
 
     const updatedItem = { ...updatedCart[updatedItemIndex] };
-    updatedItem.quantity--;
+    let cost = updatedItem.cost / updatedItem.quantity;
+    updatedItem.quantity -= _quantity;
+    updatedItem.cost = updatedItem.quantity * cost;
+    this.setState(
+      {
+        total: this.state.total - parseInt(cost),
+      },
+      () => {}
+    );
     if (updatedItem.quantity <= 0) {
       updatedCart.splice(updatedItemIndex, 1);
     } else {
@@ -258,28 +310,68 @@ class GlobalState extends Component {
     // setTimeout(() => {}, 700);
   };
 
-  doBuyAllItems = async () => {
+  async doBuyAllItems() {
     const Bearer = this.state.token_access;
+    let dDeposite = 0;
+    let error = "";
 
-    this.state.cart.map(async (cart, index) => {
-      try {
-        const response = await buyAllItems(Bearer, cart);
+    try {
+      // let response = "";
+      await Promise.all(
+        this.state.cart.map(async (cart, index) => {
+          dDeposite += cart.cost;
 
-        if (index === 0) {
-          if (response) {
+          // new Promise((resolve, reject) => {
+          //   setTimeout(() => {
+          //     buyAllItems(Bearer, cart);
+          //   }, 700);
+          // }).then((res) => {
+          //   console.log("response from promise", res); // --> 'done!'
+          //   response = res;
+          // });
+
+          const response = await setTimeout(async () => {
+            return await buyAllItems(Bearer, cart);
+          }, 700);
+
+          console.log("error_occured and returned", response);
+          if (
+            response &&
+            !error &&
+            (response.status === 401 || response.status === 404)
+          ) {
+            console.log("error_occured and returned", response);
+            error = response;
+          } else {
+            this.removeProductFromCart(cart.id, cart.quantity);
+          }
+
+          console.log("error in cart:", error);
+
+          if (index === 0 && !error) {
+            //if (response && response.status === 205)
+            // {
+            console.log("now set the state", response);
+
             this.setState({
               cart: [],
               products: [],
+              deposite: this.state.deposite - dDeposite,
             });
-            this.loadProducts();
-            return true;
-          }
-        }
-      } catch (error) {
-        return "";
-      }
-    });
-  };
+
+            await this.loadProducts();
+
+            return "";
+
+            //}
+          } else return "";
+        })
+      );
+      return error;
+    } catch (error) {
+      return "";
+    }
+  }
 
   render() {
     if (this.state.loading) {
@@ -314,6 +406,7 @@ class GlobalState extends Component {
             image: this.state.image,
             bio: this.state.bio,
             deposite: this.state.deposite,
+            total: this.state.total,
           }}
         >
           {this.props.children}

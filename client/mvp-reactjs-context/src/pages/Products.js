@@ -47,7 +47,9 @@ function ProductsPage(props) {
   return (
     <>
       <main className="products">
-        {context.user_type === "2" && (
+        {console.log("context.user_type", context.user_type)}
+        {console.log("context", context)}
+        {context.token_access && context.user_type === "2" && (
           <div>
             <Button
               as="a"

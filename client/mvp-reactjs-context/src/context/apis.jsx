@@ -95,9 +95,8 @@ export async function depositeReset(Bearer) {
     "Content-Type": "application/json",
     Authorization: `Bearer ${Bearer}`,
   };
-
-  const response = axios
-    .put(`${serverUrl}/api/auth_user/reset/`, {
+  const response = await axios
+    .put(`${serverUrl}/api/auth_user/reset/`, null, {
       headers,
     })
     .then((res) => {
@@ -184,7 +183,9 @@ export async function buyAllItems(Bearer, cart) {
     Authorization: `Bearer ${Bearer}`,
   };
 
-  const response = await axios
+  let error = "";
+
+  const res = await axios
     .put(`${serverUrl}/api/products/buy/${cart.id}/${cart.quantity}/`, null, {
       headers,
     })
@@ -193,11 +194,13 @@ export async function buyAllItems(Bearer, cart) {
     })
 
     .catch((err) => {
-      let error = "";
-      if ((err.response.data.error = null))
+      if (err.message) error = err.message;
+      else if ((err.response.data.error = null))
         error = err.response.data.code + err.response.data.detail;
       else error = err.response.data.error;
-      throw Error(error);
+      console.log("api - buyAllItems Error:", error);
+      return err.response;
     });
-  return response;
+  console.log(res);
+  return res;
 }

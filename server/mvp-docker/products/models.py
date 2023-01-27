@@ -86,11 +86,11 @@ class ProductsModel(CMSPlugin):
 
 
 class TransactionModel(CMSPlugin):
-    amount = models.IntegerField(_("amount"), null=True, blank=True, default=1)
     buyer = models.ForeignKey(User, null=True, blank=True,
                               on_delete=models.CASCADE,  verbose_name=_('buyer'),)
     product = models.ForeignKey(ProductsModel, null=True, blank=True,
                                 on_delete=models.CASCADE,  verbose_name=_('product'),)
+    amount = models.IntegerField(_("amount"), null=True, blank=True, default=1)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 

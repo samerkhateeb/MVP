@@ -11,7 +11,7 @@ function DepositeComponent(props) {
   return (
     <form onSubmit={submitHandler}>
       <Button variant="primary m-2" type="submit">
-        Reset Deposite?
+        {props.text || "Reset Deposite?"}
       </Button>
     </form>
   );

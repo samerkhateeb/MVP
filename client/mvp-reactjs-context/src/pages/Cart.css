@@ -24,3 +24,13 @@
   align-items: center;  
 
 }
+
+.cart .total {
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid #d3d3d3;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

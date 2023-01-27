@@ -6,30 +6,40 @@ import React, { useContext, useState } from "react";
 import ShopContext from "../context/shop-context";
 
 function CartPage(props) {
-  const context = useContext(ShopContext);
-  const [error, setError] = useState();
+  const { doBuyAllItems, cart, removeProductFromCart, total } = useContext(
+    ShopContext
+  );
+  const [alert, setAlert] = useState({});
   const submitBuyAll = async () => {
-    const response = await context.doBuyAllItems();
-    if (response)
-      setError(
-        "Unable to proceed with payment, you should login and have sufficient fund"
-      );
+    const response = await doBuyAllItems();
+    if (response) {
+      setAlert({
+        type: "danger",
+        message:
+          "Unable to proceed with payment, you should login and have sufficient fund",
+      });
+    } else {
+      setAlert({
+        type: "success",
+        message: "the payment is done successfully",
+      });
+    }
   };
   return (
     <main className="cart">
-      {context.cart.length <= 0 && <p>No Item in the Cart!</p>}
+      {cart.length <= 0 && <p>No Item in the Cart!</p>}
       <ul>
-        {context.cart.map((cartItem) => (
+        {cart.map((cartItem) => (
           <li key={cartItem.id}>
             <div>
-              <strong>{cartItem.title}</strong> - ${cartItem.price} (
+              <strong>{cartItem.title}</strong> - ${cartItem.cost} (
               {cartItem.quantity})
             </div>
             <div>
               <Button
                 variant="primary m-2"
                 type="button"
-                onClick={context.removeProductFromCart.bind(this, cartItem.id)}
+                onClick={removeProductFromCart.bind(this, cartItem.id, 1)}
               >
                 Remove from Cart
               </Button>
@@ -37,11 +47,16 @@ function CartPage(props) {
           </li>
         ))}
       </ul>
-      {error && <Alert variant="danger">{error}</Alert>}
-      {context.cart.length > 0 && (
-        <Button variant="primary m-2" type="button" onClick={submitBuyAll}>
-          Buy All
-        </Button>
+      {alert && alert.message && (
+        <Alert variant={alert.type}>{alert.message}</Alert>
+      )}
+      {cart.length > 0 && (
+        <>
+          <div className="total">Total: {total}.00$ </div>
+          <Button variant="primary m-2" type="button" onClick={submitBuyAll}>
+            Buy All
+          </Button>
+        </>
       )}
     </main>
   );

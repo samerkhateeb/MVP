@@ -6,6 +6,8 @@ import LogoutComponent from "../components/LogoutComponent";
 import { NavLink } from "react-router-dom";
 import shopContext from "../context/shop-context";
 
+// import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+
 function mainNavigation(props) {
   const context = useContext(shopContext);
   async function useLogoutSubmit() {
@@ -25,6 +27,12 @@ function mainNavigation(props) {
           <li>
             <NavLink to="/cart">Cart ({props.cartItemNumber})</NavLink>
           </li>
+
+          {context.token_access && context.deposite && (
+            <li>
+              <NavLink to="/account">Credit ${context.deposite}</NavLink>
+            </li>
+          )}
           {context.token_access && (
             <li>
               <LogoutComponent

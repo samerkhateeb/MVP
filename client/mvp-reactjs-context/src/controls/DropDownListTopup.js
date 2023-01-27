@@ -61,7 +61,7 @@ class DropDownListTopup extends React.Component {
               type="button"
               onClick={this.handleOpen}
             >
-              your credit is {this.state.deposite}$ .. Topup?
+              Topup Credit?
             </Button>
           }
           menu={[
