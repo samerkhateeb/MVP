@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 function AccountPage(props) {
   const navigate = useNavigate();
   const context = useContext(ShopContext);
-
+  const [messageRegister, setMessageRegister] = useState();
   let {
     deposite,
     doRegister,
@@ -34,7 +34,12 @@ function AccountPage(props) {
 
   async function useRegisterSubmit(context, data) {
     const response = await doRegister(data);
-    if (response.error !== "1") navigate("/");
+    if (response.error === "1") {
+      setMessageRegister(null);
+      setMessageRegister(
+        "there's an error in the registration, make sure you put unique information, try again !!"
+      );
+    } else navigate("/");
   }
 
   async function useDepositeReset() {
@@ -138,8 +143,12 @@ function AccountPage(props) {
           />
 
           <RegisterComponent
+            message={messageRegister}
             onSubmit={(data) => {
               useRegisterSubmit(context, data);
+            }}
+            onReset={() => {
+              setMessageRegister(null);
             }}
           />
         </div>

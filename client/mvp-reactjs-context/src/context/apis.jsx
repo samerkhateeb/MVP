@@ -26,11 +26,10 @@ export async function productsLoad() {
 
 export async function productNew(Bearer, data) {
   const headers = {
-    "Content-Type": "application/json",
     Authorization: `Bearer ${Bearer}`,
   };
   const response = axios
-    .post(`${serverUrl}/api/products/new/`, JSON.stringify(data), {
+    .post(`${serverUrl}/api/products/new/`, data, {
       headers,
     })
     .then((res) => {
@@ -47,12 +46,14 @@ export async function productNew(Bearer, data) {
 }
 
 export async function productUpdate(Bearer, data) {
+  // for (var pair of data.entries()) {
+  //   console.log(pair[0] + ", " + pair[1]);
+  // }
   const headers = {
-    "Content-Type": "application/json",
     Authorization: `Bearer ${Bearer}`,
   };
   const response = axios
-    .put(`${serverUrl}/api/products/manage/${data.id}`, JSON.stringify(data), {
+    .put(`${serverUrl}/api/products/manage/${data.get("id")}`, data, {
       headers,
     })
     .then((res) => {
@@ -157,21 +158,26 @@ export async function login(data) {
 }
 
 export async function register(data) {
-  const headers = {
+  let error = "";
+  const response = await fetch(`${serverUrl}/api/auth_user/register/`, {
     method: "POST",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  const response = await fetch(`${serverUrl}/api/auth_user/register/`, headers)
+    body: data,
+  })
     .then((res) => res.json())
     .then((json) => {
-      if (json.error != "0") {
-        throw Error(json);
+      if (json.error !== "0") {
+        return json;
       } else {
         return json.context;
       }
+    })
+    .catch((err) => {
+      if (err.message) error = err.message;
+      else if ((err.response.data.error = null))
+        error = err.response.data.code + err.response.data.detail;
+      else error = err.response.data.error;
+      console.log("api - register Error:", error);
+      return err.response;
     });
 
   return response;
@@ -201,6 +207,5 @@ export async function buyAllItems(Bearer, cart) {
       console.log("api - buyAllItems Error:", error);
       return err.response;
     });
-  console.log(res);
   return res;
 }

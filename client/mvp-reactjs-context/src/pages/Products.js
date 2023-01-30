@@ -4,6 +4,7 @@ import React, { useContext, useState } from "react";
 
 import { Button } from "react-bootstrap";
 import Card from "../components/Card";
+import FileUploadSingle from "../controls/FileUploadSingle";
 import InputField from "../controls/InputField";
 import ShopContext from "../context/shop-context";
 
@@ -15,6 +16,7 @@ function ProductsPage(props) {
   const [cost, setCost] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
+  const [images, setImages] = useState();
 
   const updateHandler = (data) => {
     context.doProductUpdate(data);
@@ -33,22 +35,21 @@ function ProductsPage(props) {
 
   const newHandler = (e) => {
     e.preventDefault();
-    const product_data = {
-      title: title,
-      description: description,
-      cost: cost,
-      amount: amount,
-      category: 3,
-    };
-    let data = product_data;
+
+    const data = new FormData();
+    data.append("title", title);
+    data.append("description", description);
+    data.append("cost", cost);
+    data.append("amount", amount);
+    if (images) data.append("images", images, images.name);
+    data.append("category", 3);
     resetNewPanel();
+
     context.doProductNew(data);
   };
   return (
     <>
       <main className="products">
-        {console.log("context.user_type", context.user_type)}
-        {console.log("context", context)}
         {context.token_access && context.user_type === "2" && (
           <div>
             <Button
@@ -77,6 +78,8 @@ function ProductsPage(props) {
                     value={amount}
                     onChange={setAmount}
                   />
+                  <FileUploadSingle title="Image" onChange={setImages} />
+
                   <Button variant="primary m-2" type="submit">
                     Save
                   </Button>

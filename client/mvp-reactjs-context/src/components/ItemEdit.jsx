@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Button } from "react-bootstrap";
+import FileUploadSingle from "../controls/FileUploadSingle";
 import InputField from "../controls/InputField";
 
 function ItemEdit(props) {
@@ -8,19 +9,20 @@ function ItemEdit(props) {
   const [cost, setCost] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
+  const [images, setImages] = useState("");
 
   const updateHandler = (e) => {
     e.preventDefault();
 
-    const product_data = {
-      id: props.product.id,
-      title: title,
-      description: description,
-      cost: cost,
-      amount: amount,
-    };
+    let data = new FormData();
 
-    const data = product_data;
+    data.append("id", props.product.id);
+    data.append("title", title);
+    data.append("description", description);
+    data.append("cost", cost);
+    data.append("amount", amount);
+    if (images) data.append("image", images, images.name);
+
     props.onUpdate(data);
   };
 
@@ -52,6 +54,8 @@ function ItemEdit(props) {
         />
         <InputField title="Cost $$" value={cost} onChange={setCost} />
         <InputField title="Amount" value={amount} onChange={setAmount} />
+        <FileUploadSingle title="Image" onChange={setImages} />
+
         <Button variant="primary m-2" type="submit">
           Save
         </Button>

@@ -203,25 +203,25 @@ class GlobalState extends Component {
     try {
       const response = await register(data);
 
-      this.setState({
-        token_access: response.token.access,
-        token_refresh: response.token.refresh,
-        token_csrf: response.token.csrf,
-        first_name: response.userprofile.first_name,
-        last_name: response.userprofile.last_name,
-        username: response.userprofile.username,
-        user_type: response.userprofile.user_type,
-        email: response.userprofile.email,
-        image: response.userprofile.image,
-        bio: response.userprofile.bio,
-        deposite: response.userprofile.deposite,
-        total: 0,
-        cart: [],
-      });
-
-      if (response.error !== "0") {
+      if (response.error === "1") {
         return response;
       } else {
+        this.setState({
+          token_access: response.token.access,
+          token_refresh: response.token.refresh,
+          token_csrf: response.token.csrf,
+          first_name: response.userprofile.first_name,
+          last_name: response.userprofile.last_name,
+          username: response.userprofile.username,
+          user_type: response.userprofile.user_type,
+          email: response.userprofile.email,
+          image: response.userprofile.image,
+          bio: response.userprofile.bio,
+          deposite: response.userprofile.deposite,
+          total: 0,
+          cart: [],
+        });
+
         this.loadProducts();
         return response;
       }
@@ -242,9 +242,7 @@ class GlobalState extends Component {
     let deposite = this.state.deposite;
 
     if (updatedItemIndex < 0 && total + cost <= deposite) {
-      this.setState({ total: total + cost }, () => {
-        console.log("this.state.total", this.state.total);
-      });
+      this.setState({ total: total + cost }, () => {});
 
       // one item
       // if the item is not exist, push it.
@@ -252,13 +250,6 @@ class GlobalState extends Component {
     } else {
       // multiple items
       const updatedItem = { ...updatedCart[updatedItemIndex] };
-      console.log("this.state.deposite", this.state.deposite);
-      console.log("this.state.total", this.state.total);
-      console.log("parseInt(product.cost)", parseInt(product.cost));
-      console.log(
-        "this.state.total + parseInt(product.cost) < this.state.deposite =",
-        this.state.total + parseInt(product.cost) <= this.state.deposite
-      );
 
       if (
         updatedItem.quantity + 1 <= product.amount &&
@@ -268,11 +259,7 @@ class GlobalState extends Component {
           {
             total: this.state.total + parseInt(product.cost),
           },
-          () => {
-            console.log("this.state.total after", this.state.total);
-            console.log("this.state.cost after", this.state.cost);
-            console.log("product.cost", product.cost);
-          }
+          () => {}
         );
 
         // if the item exist, just updatet he quentity
@@ -321,38 +308,21 @@ class GlobalState extends Component {
         this.state.cart.map(async (cart, index) => {
           dDeposite += cart.cost;
 
-          // new Promise((resolve, reject) => {
-          //   setTimeout(() => {
-          //     buyAllItems(Bearer, cart);
-          //   }, 700);
-          // }).then((res) => {
-          //   console.log("response from promise", res); // --> 'done!'
-          //   response = res;
-          // });
-
           const response = await setTimeout(async () => {
             return await buyAllItems(Bearer, cart);
           }, 700);
 
-          console.log("error_occured and returned", response);
           if (
             response &&
             !error &&
             (response.status === 401 || response.status === 404)
           ) {
-            console.log("error_occured and returned", response);
             error = response;
           } else {
             this.removeProductFromCart(cart.id, cart.quantity);
           }
 
-          console.log("error in cart:", error);
-
           if (index === 0 && !error) {
-            //if (response && response.status === 205)
-            // {
-            console.log("now set the state", response);
-
             this.setState({
               cart: [],
               products: [],

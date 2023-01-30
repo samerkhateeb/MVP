@@ -2,6 +2,7 @@ import { Alert, Button } from "react-bootstrap";
 import React, { useEffect, useRef, useState } from "react";
 
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+import FileUploadSingle from "../controls/FileUploadSingle";
 import InputField from "../controls/InputField";
 import ToggleButton from "react-bootstrap/ToggleButton";
 
@@ -12,13 +13,25 @@ function RegisterComponent(props) {
   const [password, setPassword] = useState();
   const [passwordc, setPasswordc] = useState();
   const [concent, setConcent] = useState();
-  const [image, setImage] = useState();
+  const [images, setImages] = useState();
+  // const [file, setFile] = useState();
   const [bio, setBio] = useState();
   const [error, setError] = useState();
+  const [message, setMessage] = useState();
 
   useEffect(() => {
-    setError(concent === "false");
+    if (concent === "false")
+      setMessage(
+        "You should approve our terms and conditions to proceed your registration..."
+      );
+    else {
+      setMessage(null);
+    }
   }, [concent]);
+
+  useEffect(() => {
+    setMessage(props.message);
+  }, [props.message]);
 
   const radios = [
     { name: "Reject", value: "false" },
@@ -28,19 +41,19 @@ function RegisterComponent(props) {
   function submitHandler(e) {
     e.preventDefault();
 
-    const data = {
-      firstname: firstName,
-      lastname: lastName,
-      password: password,
-      cpassword: passwordc,
-      email: email,
-      concent: concent === "true",
-      image: image,
-      bio: bio,
-    };
+    if (concent) {
+      let data = new FormData();
 
-    if (concent) props.onSubmit(data);
-    else setError(true);
+      data.append("firstname", firstName);
+      data.append("lastname", lastName);
+      data.append("password", password);
+      data.append("cpassword", passwordc);
+      data.append("email", email);
+      if (images) data.append("images", images, images.name);
+      data.append("concent", concent === "true");
+      data.append("bio", bio);
+      props.onSubmit(data);
+    } else setConcent("false");
   }
 
   return (
@@ -55,7 +68,7 @@ function RegisterComponent(props) {
           onChange={setPasswordc}
         />
         <InputField title="Email" onChange={setEmail} />
-        <InputField title="Image" notrequied="true" onChange={setImage} />
+        <FileUploadSingle title="Image" onChange={setImages} />
         <InputField
           title="Bio"
           notrequied="true"
@@ -79,16 +92,8 @@ function RegisterComponent(props) {
             </ToggleButton>
           ))}
         </ButtonGroup>
-        {error && (
-          <>
-            <Alert variant="danger">
-              You should approve our terms and conditions to proceed your
-              registration...
-            </Alert>
-          </>
-        )}
+        {message && <Alert variant="danger">{message}</Alert>}
         <br />
-
         <Button variant="primary mt-2" type="submit">
           register
         </Button>

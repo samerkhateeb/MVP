@@ -272,7 +272,6 @@ def vRegister(request):  # update the cart
     image = ""
     try:
         if request.method == 'POST':
-
             username = ""
             firstname = request.data.get('firstname')
             lastname = request.data.get('lastname')
