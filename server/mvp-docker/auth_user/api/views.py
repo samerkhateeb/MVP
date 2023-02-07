@@ -24,6 +24,7 @@ from django.db.models import Q
 import random
 from backend.templatetags.common_tags import check_google_verify, allowed_file, uploadimage, vcode_Forget_generator, check_apple_verify
 from backend.templatetags.exception import ExceptionMessage
+from django.contrib.auth import logout
 
 from ..models import DEPOSITES
 
@@ -46,15 +47,11 @@ def vLogin(request):  # update the cart
     data = {}
     res = ""
     try:
-        # ExceptionMessage('request: {0}'.format(request.data))
         if request.method == 'POST':
             username = request.data.get('username')
             password = request.data.get('password')
 
-            # ExceptionMessage('username: {0}'.format(username))
-            # ExceptionMessage('password: {0}'.format(password))
-
-            is_authenticated = False
+            # if request.user.is_anonymous == True:
             user = ''
 
             if username:
@@ -69,6 +66,30 @@ def vLogin(request):  # update the cart
                 data['context'] = data_user
                 _status = status.HTTP_200_OK
                 error = "0"
+
+    except Exception as e:
+        ExceptionMessage('vLogin Error: {0}'.format(e))
+        _status = status.HTTP_400_BAD_REQUEST
+        if settings.DEBUG:
+            error = str(e)
+
+    data['error'] = error
+
+    return Response(data, status=_status)
+
+
+@api_view(['POST'])
+@permission_classes((permissions.IsAuthenticated,))
+def vLogout(request):  # update the cart
+    error = "1"
+    _status = status.HTTP_404_NOT_FOUND
+    data = {}
+    try:
+        if request.method == 'POST':
+            ExceptionMessage('request.user Logout: {0}'.format(request.user))
+            logout(request)
+            _status = status.HTTP_200_OK
+            error = "0"
 
     except Exception as e:
         ExceptionMessage('vLogin Error: {0}'.format(e))

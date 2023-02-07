@@ -1,7 +1,7 @@
 import Card from "react-bootstrap/Card";
 import React from "react";
 
-const Wallet = ({ deposit, index = 0, render = true }) => {
+const Wallet = ({ deposit, index = 0 }) => {
   let _depo = 0;
 
   if (deposit >= 100) _depo = 100;
@@ -38,7 +38,7 @@ const Wallet = ({ deposit, index = 0, render = true }) => {
             </Card.Body>
           </Card>
 
-          <Wallet deposit={deposit} index={index + 1} render={render} />
+          <Wallet deposit={deposit} index={index + 1} />
         </>
       )}
     </>

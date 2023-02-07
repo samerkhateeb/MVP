@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 
+import Badge from "react-bootstrap/Badge";
+import { label } from "react-bootstrap";
+
 function FileUploadSingle(props) {
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -33,9 +36,12 @@ function FileUploadSingle(props) {
   // 👇 files is not an array, but it's iterable, spread to get an array of files
   return (
     <div className="m-2">
-      <label>{props.title}</label>
+      <label className="m-2">{props.title}</label>
       <input type="file" onChange={onFileChange} />
-      {fileData}
+
+      {Object.entries(fileData.props).length !== 0 && (
+        <Badge bg="success">{fileData}</Badge>
+      )}
     </div>
   );
 }

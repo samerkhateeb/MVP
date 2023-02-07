@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 function AccountPage(props) {
   const navigate = useNavigate();
   const context = useContext(ShopContext);
+  const [error, setError] = useState({ error: "", message: "" });
   const [messageRegister, setMessageRegister] = useState();
   let {
     deposite,
@@ -27,9 +28,21 @@ function AccountPage(props) {
 
   const [depositeS, setDeposite] = useState({});
   const [resetDeposite, setResetDeposite] = useState(deposite);
+
   async function useLoginSubmit(context, data) {
-    await doLogin(data);
-    navigate("/");
+    const response = await doLogin(data);
+    if (response === "error") {
+      setError({
+        error: "1",
+        message: "Error in login, please check your credentials",
+      });
+    } else {
+      setError({
+        error: "",
+        message: "",
+      });
+      navigate("/");
+    }
   }
 
   async function useRegisterSubmit(context, data) {
@@ -43,10 +56,10 @@ function AccountPage(props) {
   }
 
   async function useDepositeReset() {
-    const response = await doDepositeReset();
+    await doDepositeReset();
     setDeposite({
       message:
-        "You've Reset Your Credit Successfully!! You Can Topup Again from the Topup Section, Thanks For Using Our Services",
+        "Your process is done Successfully!! You Can Topup Again from the Topup Section, Thanks For Using Our Services",
     });
     changeChildDeposite(0);
   }
@@ -67,6 +80,8 @@ function AccountPage(props) {
       {depositeS.message && (
         <Alert variant="success">{depositeS.message}</Alert>
       )}
+      {error.error && <Alert variant="danger">{error.message}</Alert>}
+
       {token_access ? (
         <div>
           <Card className="text-center">

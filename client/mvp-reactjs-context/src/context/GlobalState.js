@@ -41,7 +41,7 @@ class GlobalState extends Component {
       image: "",
       bio: "",
       deposite: "",
-      total: "",
+      total: 0,
     };
   }
 
@@ -164,15 +164,16 @@ class GlobalState extends Component {
         total: 0,
         cart: [],
       });
+      console.log("response in global", response);
 
-      if (response.error !== "0") {
-        throw Error(response.statusText);
+      if (response.error && response.error !== "0") {
+        return "error";
       } else {
-        this.loadProducts();
-        return response;
+        await this.loadProducts();
       }
     } catch (error) {
-      console.log(error);
+      console.log("Error doLigin:", error);
+      return "error";
     }
   }
 
@@ -238,11 +239,11 @@ class GlobalState extends Component {
     );
 
     let cost = parseInt(product.cost);
-    let total = parseInt(this.state.total) || 0;
+    let total = (parseInt(this.state.total) || 0) + cost;
     let deposite = this.state.deposite;
 
-    if (updatedItemIndex < 0 && total + cost <= deposite) {
-      this.setState({ total: total + cost }, () => {});
+    if (updatedItemIndex < 0 && total <= deposite) {
+      this.setState({ total: total }, () => {});
 
       // one item
       // if the item is not exist, push it.
@@ -251,13 +252,10 @@ class GlobalState extends Component {
       // multiple items
       const updatedItem = { ...updatedCart[updatedItemIndex] };
 
-      if (
-        updatedItem.quantity + 1 <= product.amount &&
-        this.state.total + parseInt(product.cost) <= this.state.deposite
-      ) {
+      if (updatedItem.quantity + 1 <= product.amount && total <= deposite) {
         this.setState(
           {
-            total: this.state.total + parseInt(product.cost),
+            total: total,
           },
           () => {}
         );
@@ -327,6 +325,7 @@ class GlobalState extends Component {
               cart: [],
               products: [],
               deposite: this.state.deposite - dDeposite,
+              total: 0,
             });
 
             await this.loadProducts();

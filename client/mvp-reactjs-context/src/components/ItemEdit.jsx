@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { faCancel, faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import { Button } from "react-bootstrap";
 import FileUploadSingle from "../controls/FileUploadSingle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputField from "../controls/InputField";
 
 function ItemEdit(props) {
@@ -21,7 +23,7 @@ function ItemEdit(props) {
     data.append("description", description);
     data.append("cost", cost);
     data.append("amount", amount);
-    if (images) data.append("image", images, images.name);
+    if (images) data.append("images", images, images.name);
 
     props.onUpdate(data);
   };
@@ -44,6 +46,12 @@ function ItemEdit(props) {
 
   return (
     <div>
+      <form onSubmit={deleteHandler} className="right">
+        <Button type="submit" variant="primary m-2">
+          <FontAwesomeIcon icon={faTrash} size="1x" />
+        </Button>
+      </form>
+
       <form onSubmit={updateHandler}>
         <InputField title="Title" value={title} onChange={setTitle} />
         <InputField
@@ -56,8 +64,8 @@ function ItemEdit(props) {
         <InputField title="Amount" value={amount} onChange={setAmount} />
         <FileUploadSingle title="Image" onChange={setImages} />
 
-        <Button variant="primary m-2" type="submit">
-          Save
+        <Button variant="primary " type="submit">
+          <FontAwesomeIcon icon={faSave} size="1x" /> Save
         </Button>
         <Button
           variant="primary m-2"
@@ -66,12 +74,7 @@ function ItemEdit(props) {
             props.onCancel(false);
           }}
         >
-          Cancel
-        </Button>
-      </form>
-      <form onSubmit={deleteHandler}>
-        <Button type="submit" variant="primary m-2">
-          Delete
+          <FontAwesomeIcon icon={faCancel} size="1x" /> Cancel
         </Button>
       </form>
     </div>

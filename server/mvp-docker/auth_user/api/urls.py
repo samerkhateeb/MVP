@@ -18,6 +18,7 @@ urlpatterns = [
 
     url(r'^register/$', views.vRegister),
     url('^login/$', views.vLogin, ),
+    url('^logout/$', views.vLogout, ),
 
     url(r'^profile/$', views.vUserProfile),
 

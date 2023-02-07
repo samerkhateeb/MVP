@@ -1,10 +1,16 @@
 import "./Products.css";
 
 import React, { useContext, useState } from "react";
+import {
+  faCancel,
+  faCirclePlus,
+  faSave,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { Button } from "react-bootstrap";
 import Card from "../components/Card";
 import FileUploadSingle from "../controls/FileUploadSingle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputField from "../controls/InputField";
 import ShopContext from "../context/shop-context";
 
@@ -22,6 +28,7 @@ function ProductsPage(props) {
     context.doProductUpdate(data);
   };
   const deleteHandler = async (data) => {
+    setNewPanel(false, () => {});
     await context.doProductDelete(data);
   };
 
@@ -59,7 +66,7 @@ function ProductsPage(props) {
                 setNewPanel(true);
               }}
             >
-              New Product
+              <FontAwesomeIcon icon={faCirclePlus} size="1x" /> New Product
             </Button>
 
             {newPanel && (
@@ -81,7 +88,7 @@ function ProductsPage(props) {
                   <FileUploadSingle title="Image" onChange={setImages} />
 
                   <Button variant="primary m-2" type="submit">
-                    Save
+                    <FontAwesomeIcon icon={faSave} size="1x" /> Save
                   </Button>
                   <Button
                     variant="primary m-2"
@@ -90,7 +97,7 @@ function ProductsPage(props) {
                       setNewPanel(false);
                     }}
                   >
-                    Cancel
+                    <FontAwesomeIcon icon={faCancel} size="1x" /> Cancel
                   </Button>
                 </form>
               </div>

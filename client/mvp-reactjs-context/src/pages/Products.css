@@ -13,11 +13,18 @@
 .products li {
   padding: 1rem;
   margin: 1rem 0;
-    border: 1px solid #d3d3d3;
-      border-radius: 0.5rem;
+  border: 1px solid #d3d3d3;
+  border-radius: 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+}
+
+.products .cart {
+  position:absolute;
+  right:0px;
+  top:0px;
 }
 
 .products img{
@@ -39,7 +46,9 @@
   float: left;
   width: 80%;
 }
+.products .right {
+  float: right;
+}
 .products .price {
-  width: 20%;
-  text-align: center;
+  text-align: right;
 }

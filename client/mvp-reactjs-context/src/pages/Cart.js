@@ -2,7 +2,13 @@ import "./Cart.css";
 
 import { Alert, Button } from "react-bootstrap";
 import React, { useContext, useState } from "react";
+import {
+  faBasketShopping,
+  faRemove,
+  faSubway,
+} from "@fortawesome/free-solid-svg-icons";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ShopContext from "../context/shop-context";
 
 function CartPage(props) {
@@ -21,7 +27,7 @@ function CartPage(props) {
     } else {
       setAlert({
         type: "success",
-        message: "the payment is done successfully",
+        message: "The payment is done successfully",
       });
     }
   };
@@ -41,7 +47,7 @@ function CartPage(props) {
                 type="button"
                 onClick={removeProductFromCart.bind(this, cartItem.id, 1)}
               >
-                Remove from Cart
+                <FontAwesomeIcon icon={faRemove} size="1x" />
               </Button>
             </div>
           </li>
@@ -54,7 +60,7 @@ function CartPage(props) {
         <>
           <div className="total">Total: {total}.00$ </div>
           <Button variant="primary m-2" type="button" onClick={submitBuyAll}>
-            Buy All
+            <FontAwesomeIcon icon={faBasketShopping} size="1x" /> Buy All
           </Button>
         </>
       )}

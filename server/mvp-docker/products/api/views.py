@@ -67,8 +67,16 @@ def vProducts_manage(request, id):
             if obj:
                 _serializer = serializer(obj, data=request.data)
                 if _serializer and _serializer.is_valid():
+
+                    img_arr = []
+                    if len(request.FILES) != 0:
+                        images = request.FILES.getlist('images')
+                        img_arr = process_images(images, request.user, 1)
+
+                    _serializer.save(image=img_arr['image'] if len(
+                        img_arr) > 0 else obj.image,)
+
                     data['context'] = _serializer.validated_data
-                    _serializer.save()
                     _status = status.HTTP_205_RESET_CONTENT
                     # data = _address_data
                     error = "0"
