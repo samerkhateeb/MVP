@@ -43,7 +43,6 @@ sudo -u postgres pg_ctl -D/Library/PostgreSQL/12/data stop
 After you clone the repository in your machine, go to the directory `client\mvp-reactjs-context`, then you have to install the packages using `yarn`, then after the packages are successfully installed, please type `yarn start`, this will activate the environment in your local machine in the URL:
 http://localhost:3000/
 
-<img width="691" alt="image" src="https://user-images.githubusercontent.com/55295850/215529434-b8e8e758-160e-46f4-b079-f211976a8a3d.png">
 <img width="716" alt="image" src="https://user-images.githubusercontent.com/55295850/215528968-47cc1ed5-6be4-4be8-b698-364418f88f35.png">
 
 <img width="733" alt="image" src="https://user-images.githubusercontent.com/55295850/215529766-52042676-2772-4f46-89b1-f09cd1fb41ee.png">
