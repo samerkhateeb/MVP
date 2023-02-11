@@ -1,4 +1,4 @@
-# Welcome to MVP Project (ReactJs / Django)
+# Welcome to Shopping Project (ReactJs / Django)
 it is me Samer, i am working as a FullStack developer, and i've developed this application using ReactJs-Context for the Frontend and Django-Postgresql for the Backend and containarize them with Docker.
 
 ```
